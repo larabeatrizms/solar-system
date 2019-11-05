@@ -1,9 +1,12 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <stdio.h>
 
-static int year1 = 0, year2 = 0, year3 = 0, year4 = 0, year5 = 0, year6 = 0, year7 = 0, year8 = 0, year9 = 0, yearLua = 0;
-static int day1 = 0, day2 = 0, day3 = 0, day4 = 0, day5 = 0, day6 = 0, day7 = 0, day8 = 0, day9 = 0, dayLua = 0;
+static float year[10] = {0};
+static float day[10] = {0};
+static float dist[10] = {57, 108, 149, 227, 778, 1429, 2870, 4504, 5922, 152};
+static float diam[10] = {2440, 6502, 6378, 3398, 71492, 60268, 25559, 24764, 1153, 1737};
 
 void spinDisplayRight(void);
 void spinDisplayLeft(void);
@@ -11,6 +14,10 @@ void spinDisplayYearLeft(void);
 void spinDisplayYearRight(void);
 void spinDisplayDayLeft(void);
 void spinDisplayDayRight(void);
+float rest(float year);
+long map(float x, long in_min, long in_max, long out_min, long out_max);
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
+float distance(float dist);
 
 void init(void) 
 {
@@ -30,89 +37,89 @@ void display(void)
 
    //Desenhando o planeta 1 - Mércurio
    glPushMatrix();
-   glRotatef ((GLfloat) year1, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day1, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[0], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[0]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[0], 0.0, 1.0, 0.0);
    glutWireSphere(0.3, 10, 8);
    glPopMatrix();
 
    //Desenhando o planeta 2 - Vênus
    glPushMatrix();
-   glRotatef ((GLfloat) year2, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day2, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[1], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[1]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[1], 0.0, 1.0, 0.0);
    glutWireSphere(0.28, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 3 - Terra
    glPushMatrix();
-   glRotatef ((GLfloat) year3, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day3, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[2], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[2]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[2], 0.0, 1.0, 0.0);
    glutWireSphere(0.26, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 4 - Marte
    glPushMatrix();
-   glRotatef ((GLfloat) year4, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day4, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[3], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[3]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[3], 0.0, 1.0, 0.0);
    glutWireSphere(0.20, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 5 - Júpiter
    glPushMatrix();
-   glRotatef ((GLfloat) year5, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day5, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[4], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[4]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[4], 0.0, 1.0, 0.0);
    glutWireSphere(0.17, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 6 - Saturno
    glPushMatrix();
-   glRotatef ((GLfloat) year6, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day6, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[5], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[5]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[5], 0.0, 1.0, 0.0);
    glutWireSphere(0.14, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 7 - Urano
    glPushMatrix();
-   glRotatef ((GLfloat) year7, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day7, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[6], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[6]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[6], 0.0, 1.0, 0.0);
    glutWireSphere(0.10, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 8 - Netuno
    glPushMatrix();
-   glRotatef ((GLfloat) year8, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day8, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[7], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[7]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[7], 0.0, 1.0, 0.0);
    glutWireSphere(0.08, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando o planeta 9 - Plutão
    glPushMatrix();
-   glRotatef ((GLfloat) year9, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) day9, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[8], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[8]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[8], 0.0, 1.0, 0.0);
    glutWireSphere(0.05, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
 
    //Desenhando a Lua
    glPushMatrix();
-   glRotatef ((GLfloat) yearLua, 0.0, 1.0, 0.0);
-   glTranslatef (2.0, 0.0, 0.0);
-   glRotatef ((GLfloat) dayLua, 0.0, 1.0, 0.0);
+   glRotatef ((GLfloat) year[9], 0.0, 1.0, 0.0);
+   glTranslatef ((GLfloat)distance(dist[9]), 0.0, 0.0);
+   glRotatef ((GLfloat) day[9], 0.0, 1.0, 0.0);
    glutWireSphere(0.32, 10, 8);
    glPopMatrix();
    glutSwapBuffers();
@@ -131,32 +138,72 @@ void reshape (int w, int h)
 
 void spinDisplayDayLeft(void){
 
-   day1 = (day1 + 14) % 360;
-   day2 = (day2 + 13) % 360;
-   day3 = (day3 + 12) % 360;
-   day4 = (day4 + 11) % 360;
-   day5 = (day5 + 10) % 360;
-   day6 = (day6 + 9) % 360;
-   day7 = (day7 + 8) % 360;
-   day8 = (day8 + 7) % 360;
-   day9 = (day9 + 6) % 360;
-   dayLua = (dayLua + 15) % 360;
+   float velDay1[10] = {0.003, 0.002, 0.46, 0.12, 12.57, 10.28, 2.58, 2.69, 0.802, 1.022};
+   float velDay2[10];
+
+   for(int i=0; i<10; i++){
+      velDay2[i] = mapFloat(velDay1[i],0.002,12.57,1,10);
+   }
+
+   printf("velvenus %f", velDay2[2]);
+
+   for(int i=0; i<10; i++){
+      day[i] = rest(day[i] + velDay2[i]);
+   }
 
 }
 
 void spinDisplayYearLeft(void){
 
-   year1 = (year1 + 14) % 360;
-   year2 = (year2 + 13) % 360;
-   year3 = (year3 + 12) % 360;
-   year4 = (year4 + 11) % 360;
-   year5 = (year5 + 10) % 360;
-   year6 = (year6 + 9) % 360;
-   year7 = (year7 + 8) % 360;
-   year8 = (year8 + 7) % 360;
-   year9 = (year9 + 6) % 360;
-   yearLua = (yearLua + 15) % 360;
+   float velYear1[10] = {48, 35, 29, 24, 13, 9, 6, 5, 4, 1};
+   float velYear2[10];
 
+   for(int i=0; i<10; i++){
+      velYear2[i] = map(velYear1[i],1,48,2,10);
+   }
+
+   printf("vel1 %f", velYear2[1]);
+
+   for(int i=0; i<10; i++){
+      year[i] = rest(year[i] + velYear2[i]);
+   }
+
+}
+
+float rest(float year) {
+   float r;
+
+   if(year / 360 == 1){
+
+      return 0;
+   }else{
+
+      r = year - 360*((int)(year/360));
+      return r;
+   }
+
+}
+
+long map(float x, long in_min, long in_max, long out_min, long out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+float distance(float dist){
+
+   return mapFloat(dist,57,5922,2,10);
+   
+}
+
+float diameter(float diam){
+
+   return mapFloat(diam,1153,71492,2,10);
+   
 }
 
 
@@ -169,31 +216,35 @@ void spinDisplayLeft(void)
 
 void spinDisplayDayRight(void){
 
-   day1 = (day1 - 14) % 360;
-   day2 = (day2 - 13) % 360;
-   day3 = (day3 - 12) % 360;
-   day4 = (day4 - 11) % 360;
-   day5 = (day5 - 10) % 360;
-   day6 = (day6 - 9) % 360;
-   day7 = (day7 - 8) % 360;
-   day8 = (day8 - 7) % 360;
-   day9 = (day9 - 6) % 360;
-   dayLua = (dayLua - 15) % 360;
+   float velYear1[10] = {48, 35, 29, 24, 13, 9, 6, 5, 4, 1};
+   float velYear2[10];
+
+   for(int i=0; i<10; i++){
+      velYear2[i] = map(velYear1[i],1,48,1,10);
+   }
+
+   printf("vel1 %f", velYear2[1]);
+
+   for(int i=0; i<10; i++){
+      year[i] = rest(year[i] - velYear2[i]);
+   }
 
 }
 
 void spinDisplayYearRight(void){
 
-   year1 = (year1 - 14) % 360;
-   year2 = (year2 - 13) % 360;
-   year3 = (year3 - 12) % 360;
-   year4 = (year4 - 11) % 360;
-   year5 = (year5 - 10) % 360;
-   year6 = (year6 - 9) % 360;
-   year7 = (year7 - 8) % 360;
-   year8 = (year8 - 7) % 360;
-   year9 = (year9 - 6) % 360;
-   yearLua = (yearLua - 15) % 360;
+   float velYear1[10] = {48, 35, 29, 24, 13, 9, 6, 5, 4, 1};
+   float velYear2[10];
+
+   for(int i=0; i<10; i++){
+      velYear2[i] = map(velYear1[i],1,48,1,10);
+   }
+
+   printf("vel1 %f", velYear2[1]);
+
+   for(int i=0; i<10; i++){
+      year[i] = rest(year[i] - velYear2[i]);
+   }
 
 }
 
