@@ -1,3 +1,3 @@
 # Solar System
 
-Sistema solar desenvolvido no OpenGL.
+Sistema Solar desenvolvido no OpenGL.
