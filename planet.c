@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 //Definições dos arrays de dados utilizados
+static float velSol = 0;
 static float year[8] = {0};
 static float day[8] = {0};
 static float dist[8] = {57, 108, 149, 227, 778, 1429, 2870, 4504};
@@ -93,18 +94,21 @@ void display(void)
    glPushMatrix(); 
 
    glEnable(GL_TEXTURE_2D);  
-   GLuint texture = LoadTextureImageFile("texturas_2/stars.bmp");   
+   GLuint texture = LoadTextureImageFile("texturas_2/bg1.bmp");   
    glBindTexture(GL_TEXTURE_2D, texture);  
+   //even better quality, but this will do for now.
+   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+   glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
    
    glBegin(GL_QUADS);  
    glTexCoord2f(0.0, 0.0);  
-   glVertex3f(-4.0, 4.0, 0.0);  
+   glVertex3f(-8.0, 8.0, 0.0);  
    glTexCoord2f(0.0, 1.0);  
-   glVertex3f(4.0, 4.0, 0.0);  
+   glVertex3f(8.0, 8.0, 0.0);  
    glTexCoord2f(1.0, 1.0);  
-   glVertex3f(4.0, -4.0, 0.0);  
+   glVertex3f(8.0, -8.0, 0.0);  
    glTexCoord2f(1.0, 0.0);  
-   glVertex3f(-4.0, -4.0, 0.0);  
+   glVertex3f(-8.0, -8.0, 0.0);  
    glEnd(); 
    glDeleteTextures(1, &texture);
    glDisable(GL_TEXTURE_2D); 
@@ -127,7 +131,8 @@ void display(void)
    gluQuadricDrawStyle(quadSol, GLU_FILL);
    gluQuadricNormals(quadSol, GLU_SMOOTH);
    gluQuadricTexture(quadSol, GL_TRUE);
-   gluSphere(quadSol, (GLfloat)radius(rads[0]), 10, 8);
+   glRotatef ((GLfloat) velSol, 0.0, 1.0, 0.0);
+   gluSphere(quadSol, (GLfloat) 0.6 , 10, 8);
    glDeleteTextures(1, &textSol);
    glDisable(GL_TEXTURE_2D); 
    glPopMatrix(); 
@@ -399,12 +404,15 @@ void spinDisplayDayLeft(void){
    float velDay2[10];
 
    for(int i=0; i<10; i++){
-      velDay2[i] = mapFloat(velDay1[i],0.002,12.57,0.3,3);
+      velDay2[i] = mapFloat(velDay1[i],0.002,12.57,0.2,1);
    }
 
    for(int i=0; i<10; i++){
       day[i] = rest(day[i] + velDay2[i]);
+      
    }
+   velSol = rest(velSol + 0.1);
+   
 
 }
 
@@ -414,12 +422,14 @@ void spinDisplayYearLeft(void){
    float velYear2[10];
 
    for(int i=0; i<10; i++){
-      velYear2[i] = mapFloat(velYear1[i],1,48,0.3,3);
+      velYear2[i] = mapFloat(velYear1[i],1,48,0.2,1);
    }
 
    for(int i=0; i<10; i++){
       year[i] = rest(year[i] + velYear2[i]);
    }
+
+   velSol = rest(velSol + 0.1);
 
 }
 
@@ -444,7 +454,7 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 
 float distance(float dist){
 
-   return mapFloat(dist,57,4504,0.5,2);
+   return mapFloat(dist,57,4504,1.5,10);
    
 }
 
@@ -483,7 +493,7 @@ void spinDisplayYearRight(void){
    float velYear2[10];
 
    for(int i=0; i<10; i++){
-      velYear2[i] = mapFloat(velYear1[i],1,48,1,10);
+      velYear2[i] = mapFloat(velYear1[i],1,48,1,3);
    }
 
    for(int i=0; i<10; i++){
