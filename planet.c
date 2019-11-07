@@ -6,9 +6,10 @@
 
 //Definições dos arrays de dados utilizados
 static float year[10] = {0};
+//static float year[10] = {0, 30, 50, 80, 100, 130, 170, 210, 250, 300};
 static float day[10] = {0};
 static float dist[10] = {57, 108, 149, 227, 778, 1429, 2870, 4504, 5922, 152};
-static float rads[11] = {695000, 2440, 6502, 6378, 3398, 71492, 60268, 25559, 24764, 1153, 1737};
+static float rads[11] = {300000, 2440, 6502, 6378, 3398, 71492, 60268, 25559, 24764, 1153, 1737};
 
 //Funções definidas para as rotações em torno do sol e do próprio planeta
 void spinDisplayRight(void);
@@ -104,21 +105,6 @@ void display(void)
    glutWireSphere((GLfloat) radius(rads[8]), 10, 8);
    glPopMatrix();
    
-   //Desenhando o planeta 9 - Plutão
-   glPushMatrix();
-   glRotatef ((GLfloat) year[8], 0.0, 1.0, 0.0);
-   glTranslatef ((GLfloat)distance(dist[8]), 0.0, 0.0);
-   glRotatef ((GLfloat) day[8], 0.0, 1.0, 0.0);
-   glutWireSphere((GLfloat) radius(rads[9]), 10, 8);
-   glPopMatrix();
-
-   //Desenhando a Lua
-   glPushMatrix();
-   glRotatef ((GLfloat) year[9], 0.0, 1.0, 0.0);
-   glTranslatef ((GLfloat)distance(dist[9]), 0.0, 0.0);
-   glRotatef ((GLfloat) day[9], 0.0, 1.0, 0.0);
-   glutWireSphere((GLfloat) radius(rads[10]), 10, 8);
-   glPopMatrix();
    glutSwapBuffers();
 }
 
@@ -127,10 +113,10 @@ void reshape (int w, int h)
    glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
    glMatrixMode (GL_PROJECTION);
    glLoadIdentity ();
-   gluPerspective(70.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
+   gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt (0.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+   gluLookAt (0.0, 1.5, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 void spinDisplayDayLeft(void){
@@ -184,13 +170,13 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 
 float distance(float dist){
 
-   return mapFloat(dist,57,5922,1.5,5);
+   return mapFloat(dist,57,4504,0.5,2);
    
 }
 
 float radius(float rad){
 
-   return mapFloat(rad,1153,695000,0.2,1);
+   return mapFloat(rad,2440,300000,0.1,0.4);
    
 }
 
@@ -257,8 +243,8 @@ int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
-   glutInitWindowSize (1000, 1000); 
-   glutInitWindowPosition (100, 100);
+   glutInitWindowSize (1500, 1500); 
+   glutInitWindowPosition (500, 500);
    glutCreateWindow (argv[0]);
    init ();
    glutDisplayFunc(display); 
