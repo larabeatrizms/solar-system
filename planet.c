@@ -86,15 +86,38 @@ void display(void)
    GLUquadric *quadSol, *quadMerc, *quadVen, *quadTerra, *quadMarte, *quadJup, *quadSat, *quadNetuno, *quadUrano;
 
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+   //background();
+
+   glDisable(GL_DEPTH_TEST);
+   glPushMatrix(); 
+
+   glEnable(GL_TEXTURE_2D);  
+   GLuint texture = LoadTextureImageFile("texturas_2/stars.bmp");   
+   glBindTexture(GL_TEXTURE_2D, texture);  
+   
+   glBegin(GL_QUADS);  
+   glTexCoord2f(0.0, 0.0);  
+   glVertex3f(-4.0, 4.0, 0.0);  
+   glTexCoord2f(0.0, 1.0);  
+   glVertex3f(4.0, 4.0, 0.0);  
+   glTexCoord2f(1.0, 1.0);  
+   glVertex3f(4.0, -4.0, 0.0);  
+   glTexCoord2f(1.0, 0.0);  
+   glVertex3f(-4.0, -4.0, 0.0);  
+   glEnd(); 
+   glDeleteTextures(1, &texture);
+   glDisable(GL_TEXTURE_2D); 
+   glPopMatrix(); 
+
    glEnable(GL_DEPTH_TEST);
 
 
    //glColor3f (1.0, 1.0, 0.1);
 
-   background();
-
+    
    //Desenhando o sol
-   glPushMatrix();
+   glPushMatrix(); 
 
    glEnable(GL_TEXTURE_2D); 
    textSol = LoadTextureImageFile("texturas_2/bmp_sun.bmp");  
@@ -107,8 +130,8 @@ void display(void)
    gluSphere(quadSol, (GLfloat)radius(rads[0]), 10, 8);
    glDeleteTextures(1, &textSol);
    glDisable(GL_TEXTURE_2D); 
-
-   glPopMatrix();
+   glPopMatrix(); 
+    
 
    //Desenhando o planeta 1 - Mércurio
    glPushMatrix();
@@ -270,8 +293,16 @@ void display(void)
    glDisable(GL_TEXTURE_2D);
 
    glPopMatrix();
+
+   // glPopMatrix();
+
    
-   glutSwapBuffers();
+   
+   //glutSwapBuffers(); 
+
+   
+   glutSwapBuffers(); 
+
 }
 
 void background()
@@ -349,7 +380,6 @@ void background()
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
-
 }
 
 void reshape (int w, int h)
@@ -487,7 +517,7 @@ int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-   glutInitWindowSize (1500, 1500); 
+   glutInitWindowSize (800, 500); 
    glutInitWindowPosition (500, 500);
    glutCreateWindow (argv[0]);
    init ();
