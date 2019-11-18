@@ -28,10 +28,10 @@ float fb = 0.2;
 
 //Funções definidas para as rotações em torno do sol e do próprio planeta
 void spinDisplayRight(void);
-void spinDisplayLeft(void);
-void spinDisplayYearLeft(void);
+void spinDisplay(void);
+void spinDisplayYear(void);
 void spinDisplayYearRight(void);
-void spinDisplayDayLeft(void);
+void spinDisplayDay(void);
 void spinDisplayDayRight(void);
 
 //Funções auxiliares
@@ -116,7 +116,6 @@ void display(void)
 {  
    GLuint textSol, textMerc, textVen, textTerra, textLua, textMarte, textJup, textSat, textUrano, textNetuno;
    GLUquadric *quadSol, *quadMerc, *quadVen, *quadTerra, *quadLua, *quadMarte, *quadJup, *quadSat, *quadNetuno, *quadUrano;
-   GLUquadricObj *disk;
 
     if (_moveForeBack)
     {
@@ -129,13 +128,7 @@ void display(void)
         Moving_Left_Right_Direction(_Angle);
     }
 
-   disk = gluNewQuadric();
-
-   //gluDisk(disk, inDiameter, outDiameter, vertSlices, horizSlices);
-
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-   //background();
 
    glDisable(GL_DEPTH_TEST);
    glPushMatrix(); 
@@ -143,7 +136,7 @@ void display(void)
    glEnable(GL_TEXTURE_2D);  
    GLuint texture = LoadTextureImageFile("texturas_2/bmp_stars_milky_way.bmp");   
    glBindTexture(GL_TEXTURE_2D, texture);  
-   //even better quality, but this will do for now.
+   // Melhora a qualidade da textura
    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
    
@@ -165,17 +158,12 @@ void display(void)
 
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0); 
-
-
-   //glColor3f (1.0, 1.0, 0.1);
-
     
    //Desenhando o sol
    glPushMatrix(); 
 
    glEnable(GL_TEXTURE_2D); 
    textSol = LoadTextureImageFile("texturas_2/bmp_sun.bmp");  
-   //printf("textura: %d", textura); 
    glBindTexture(GL_TEXTURE_2D, textSol); 
    quadSol = gluNewQuadric();
    gluQuadricDrawStyle(quadSol, GLU_FILL);
@@ -205,7 +193,7 @@ void display(void)
    glRotatef ((GLfloat) year[0], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[0]), 0.0, 0.0);
    glRotatef ((GLfloat) day[0], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadMerc, (GLfloat)radius(rads[1]), 10, 8);
    glDeleteTextures(1, &textMerc);
    glDisable(GL_TEXTURE_2D); 
@@ -225,7 +213,7 @@ void display(void)
    glRotatef ((GLfloat) year[1], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[1]), 0.0, 0.0);
    glRotatef ((GLfloat) day[1], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadVen, (GLfloat)radius(rads[2]), 10, 8);
    glDeleteTextures(1, &textVen);
    glDisable(GL_TEXTURE_2D);
@@ -246,7 +234,6 @@ void display(void)
    glRotatef ((GLfloat) year[2], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[2]), 0.0, 0.0);
    glRotatef ((GLfloat) day[2], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
    glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo); // Reflexo de luminosidade 
    gluSphere(quadTerra, (GLfloat)radius(rads[3]), 10, 8);
    glDeleteTextures(1, &textTerra);
@@ -264,11 +251,9 @@ void display(void)
    gluQuadricDrawStyle(quadLua, GLU_FILL);
    gluQuadricNormals(quadLua, GLU_SMOOTH);
    gluQuadricTexture(quadLua, GL_TRUE); 
-   //glTranslatef(5.0, 0.0, 8.0);
    glRotatef ((GLfloat) year[2], 0.0, 0.2, 0.0);
    glTranslatef ((GLfloat)distance(dist[2])/10.0, 0.0, 0.0);
-   //glRotatef ((GLfloat) day[2], 0.0, 1.0, 0.0);
-   glColor3f (0.1, 0.35, 0.8);
+   glRotatef ((GLfloat) day[2], 0.0, 1.0, 0.0);
    glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo); // Reflexo de luminosidade 
    gluSphere(quadLua, (GLfloat)radius(rads[3])/3.0, 10, 8);
    glDeleteTextures(1, &textLua);
@@ -291,7 +276,7 @@ void display(void)
    glRotatef ((GLfloat) year[3], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[3]), 0.0, 0.0);
    glRotatef ((GLfloat) day[3], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadMarte, (GLfloat)radius(rads[4]), 10, 8);
    glDeleteTextures(1, &textMarte);
    glDisable(GL_TEXTURE_2D);
@@ -311,7 +296,7 @@ void display(void)
    glRotatef ((GLfloat) year[4], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[4]), 0.0, 0.0);
    glRotatef ((GLfloat) day[4], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadJup, (GLfloat)radius(rads[5]), 10, 8);
    glDeleteTextures(1, &textJup);
    glDisable(GL_TEXTURE_2D);
@@ -331,7 +316,7 @@ void display(void)
    glRotatef ((GLfloat) year[5], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[5]), 0.0, 0.0);
    glRotatef ((GLfloat) day[5], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadSat, (GLfloat)radius(rads[6]), 10, 8);
    glDeleteTextures(1, &textSat);
    glDisable(GL_TEXTURE_2D);
@@ -364,7 +349,7 @@ void display(void)
    glRotatef ((GLfloat) year[6], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[6]), 0.0, 0.0);
    glRotatef ((GLfloat) day[6], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadUrano, (GLfloat)radius(rads[7]), 10, 8);
    glDeleteTextures(1, &textUrano);
    glDisable(GL_TEXTURE_2D);
@@ -384,7 +369,7 @@ void display(void)
    glRotatef ((GLfloat) year[7], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[7]), 0.0, 0.0);
    glRotatef ((GLfloat) day[7], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadNetuno, (GLfloat)radius(rads[8]), 10, 8);
    glDeleteTextures(1, &textNetuno);
    glDisable(GL_TEXTURE_2D);
@@ -393,83 +378,6 @@ void display(void)
   
    glutSwapBuffers(); 
 
-}
-
-void background()
-{
-
-    GLuint text_cosmo = LoadTextureImageFile("texturas_2/bmp_stars_milky_way.bmp");  
-    int width = 256;
-    int height = 256;
-    int length = 256;
-
-    //start in this coordinates
-    int x = 0;
-    int y = 0;
-    int z = 0;
-
-    //center the square
-    x = x - width / 2;
-    y = y - height / 2;
-    z = z - length / 2;
-
-    glEnable(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y,  z);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, z); 
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z);
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
-    glEnd();
-
-    //FRONT
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);  
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y,  z + length);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z + length);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z + length); 
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y,  z + length);
-    glEnd();
-
-    //BOTTOM
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y,  z);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y,  z + length);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y,  z + length); 
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y,  z);
-    glEnd();
-
-    //TOP
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y + height, z);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y + height, z + length); 
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z + length);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z);
-    glEnd();
-
-    //LEFT
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z); 
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z + length); 
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y,  z + length);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y,  z);     
-
-    glEnd();
-
-    //RIGHT
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);  
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y,  z);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y,  z + length);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, z + length); 
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z);
-    glEnd();
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 void reshape (int w, int h)
@@ -481,13 +389,10 @@ void reshape (int w, int h)
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
    gluLookAt (0.0, 1.5, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-   //gluLookAt (3.0, 1.5, 0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-   //gluLookAt(X, Y, Z, X + X_2, Y, Z + Z_2, 0.0f, 1.0f, 0.0f);
-   //gluLookAt(1.0,2.0,5.0, 0.0,0.0,0.0, 0.0,1.0,0.0);
    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST ); 
 }
 
-void spinDisplayDayLeft(void){
+void spinDisplayDay(void){
 
    float velDay1[10] = {0.003, 0.002, 0.46, 0.12, 12.57, 10.28, 2.58, 2.69, 0.802, 1.022};
    float velDay2[10];
@@ -504,11 +409,9 @@ void spinDisplayDayLeft(void){
       
    }
    velSol = rest(velSol + 0.1);
-   
-
 }
 
-void spinDisplayYearLeft(void){
+void spinDisplayYear(void){
 
    float velYear1[10] = {48, 35, 29, 24, 13, 9, 6, 5, 4, 1};
    float velYear2[10];
@@ -556,21 +459,25 @@ float radius(float rad){
    
 }
 
-void spinDisplayLeft(void) {
+void spinDisplay(void) {
 
-   spinDisplayDayLeft();
-   spinDisplayYearLeft();
+   spinDisplayDay();
+   spinDisplayYear();
    glutPostRedisplay();
 }
 
-void keyboard (unsigned char key, int x, int y)
+void mouse (int button, int state, int x, int y)
 {
-   switch (key) {
-      case 'y':
-         glutIdleFunc(spinDisplayLeft);
+   switch (button) {
+      case GLUT_LEFT_BUTTON:
+         glutIdleFunc(spinDisplay);
          break;
+      case GLUT_MIDDLE_BUTTON:
+	 glutIdleFunc(NULL);
+	 break;
       default:
          break;
+      
    }
 }
 
@@ -594,8 +501,6 @@ void Key_Pressed(int key, int x, int y)
     }
     else if (key == GLUT_KEY_PAGE_UP)
     {
-        //Z += 2;
-	//X+=0.5;
 	Y+=0.5;
         glLoadIdentity();
         gluLookAt(X , Y, Z, X + X_2, Y , Z + Z_2 , 0.0f, 1.0f, 0.0f);
@@ -603,8 +508,6 @@ void Key_Pressed(int key, int x, int y)
     }
     else if (key == GLUT_KEY_PAGE_DOWN)
     {
-        //Z -= 2;
-	//X-=0.5;
 	Y-=0.5;
         glLoadIdentity();
         gluLookAt(X, Y, Z, X + X_2, Y, Z + Z_2 , 0.0f, 1.0f, 0.0f);
@@ -649,7 +552,7 @@ int main(int argc, char** argv)
    init ();
    glutDisplayFunc(display); 
    glutReshapeFunc(reshape);
-   glutKeyboardFunc(keyboard);
+   glutMouseFunc(mouse);
    glutSpecialFunc(Key_Pressed);
    glutSpecialUpFunc(Key_Released);
    glutMainLoop();
