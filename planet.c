@@ -3,6 +3,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
+#include <math.h>
 
 //Definições dos arrays de dados utilizados
 float sol[] = {1,1,0,1};
@@ -88,15 +89,8 @@ void display(void)
 {  
    GLuint textSol, textMerc, textVen, textTerra, textMarte, textJup, textSat, textUrano, textNetuno;
    GLUquadric *quadSol, *quadMerc, *quadVen, *quadTerra, *quadMarte, *quadJup, *quadSat, *quadNetuno, *quadUrano;
-   GLUquadricObj *disk;
-
-   disk = gluNewQuadric();
-
-   //gluDisk(disk, inDiameter, outDiameter, vertSlices, horizSlices);
 
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-   //background();
 
    glDisable(GL_DEPTH_TEST);
    glPushMatrix(); 
@@ -127,16 +121,11 @@ void display(void)
    glEnable(GL_LIGHTING);
    glEnable(GL_LIGHT0); 
 
-
-   //glColor3f (1.0, 1.0, 0.1);
-
-    
    //Desenhando o sol
    glPushMatrix(); 
 
    glEnable(GL_TEXTURE_2D); 
    textSol = LoadTextureImageFile("texturas_2/bmp_sun.bmp");  
-   //printf("textura: %d", textura); 
    glBindTexture(GL_TEXTURE_2D, textSol); 
    quadSol = gluNewQuadric();
    gluQuadricDrawStyle(quadSol, GLU_FILL);
@@ -151,7 +140,6 @@ void display(void)
    glLightfv(GL_LIGHT0, GL_POSITION, dir); // Cria a luz do sol em todas as direções 
    glPopMatrix(); 
     
-
    //Desenhando o planeta 1 - Mércurio
    glPushMatrix();
 
@@ -165,7 +153,7 @@ void display(void)
    glRotatef ((GLfloat) year[0], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[0]), 0.0, 0.0);
    glRotatef ((GLfloat) day[0], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadMerc, (GLfloat)radius(rads[1]), 10, 8);
    glDeleteTextures(1, &textMerc);
    glDisable(GL_TEXTURE_2D); 
@@ -185,13 +173,12 @@ void display(void)
    glRotatef ((GLfloat) year[1], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[1]), 0.0, 0.0);
    glRotatef ((GLfloat) day[1], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadVen, (GLfloat)radius(rads[2]), 10, 8);
    glDeleteTextures(1, &textVen);
    glDisable(GL_TEXTURE_2D);
  
    glPopMatrix();
-   
    
    //Desenhando o planeta 3 - Terra
    glPushMatrix();
@@ -206,7 +193,6 @@ void display(void)
    glRotatef ((GLfloat) year[2], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[2]), 0.0, 0.0);
    glRotatef ((GLfloat) day[2], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
    glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo); // Reflexo de luminosidade 
    gluSphere(quadTerra, (GLfloat)radius(rads[3]), 10, 8);
    glDeleteTextures(1, &textTerra);
@@ -227,7 +213,7 @@ void display(void)
    glRotatef ((GLfloat) year[3], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[3]), 0.0, 0.0);
    glRotatef ((GLfloat) day[3], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadMarte, (GLfloat)radius(rads[4]), 10, 8);
    glDeleteTextures(1, &textMarte);
    glDisable(GL_TEXTURE_2D);
@@ -247,7 +233,7 @@ void display(void)
    glRotatef ((GLfloat) year[4], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[4]), 0.0, 0.0);
    glRotatef ((GLfloat) day[4], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadJup, (GLfloat)radius(rads[5]), 10, 8);
    glDeleteTextures(1, &textJup);
    glDisable(GL_TEXTURE_2D);
@@ -267,11 +253,24 @@ void display(void)
    glRotatef ((GLfloat) year[5], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[5]), 0.0, 0.0);
    glRotatef ((GLfloat) day[5], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadSat, (GLfloat)radius(rads[6]), 10, 8);
    glDeleteTextures(1, &textSat);
    glDisable(GL_TEXTURE_2D);
 
+   glLineWidth(3.0f);
+   glBegin(GL_LINE_LOOP);
+   //aneis de saturno
+   for(int j = 1; j <= 3; j ++){
+      for (int i = 1; i <= 100; i++) {    
+	     glVertex2f((0.20 + 0.015*j) * cos(2.0 * 3.14 * i / 100), (0.20 + 0.015*j) * sin(2.0 * 3.14 * i / 100));      
+         glVertex2f((0.20 + 0.015*j) * cos(2.0 * 3.14 * i / 100), (0.20 + 0.015*j) * sin(2.0 * 3.14 * i / 100));
+         glVertex2f((0.20 + 0.015*j) * cos(2.0 * 3.14 * i / 100), (0.20 + 0.015*j) * sin(2.0 * 3.14 * i / 100));
+		
+	  }
+   }
+   glEnd();
+   
    glPopMatrix();
    
    //Desenhando o planeta 7 - Urano
@@ -287,7 +286,7 @@ void display(void)
    glRotatef ((GLfloat) year[6], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[6]), 0.0, 0.0);
    glRotatef ((GLfloat) day[6], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadUrano, (GLfloat)radius(rads[7]), 10, 8);
    glDeleteTextures(1, &textUrano);
    glDisable(GL_TEXTURE_2D);
@@ -307,99 +306,15 @@ void display(void)
    glRotatef ((GLfloat) year[7], 0.0, 1.0, 0.0);
    glTranslatef ((GLfloat)distance(dist[7]), 0.0, 0.0);
    glRotatef ((GLfloat) day[7], 0.0, 1.0, 0.0);
-   //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo);
    gluSphere(quadNetuno, (GLfloat)radius(rads[8]), 10, 8);
    glDeleteTextures(1, &textNetuno);
    glDisable(GL_TEXTURE_2D);
 
    glPopMatrix();
-
-   // glPopMatrix();
-
-   
-   
-   //glutSwapBuffers(); 
-
    
    glutSwapBuffers(); 
 
-}
-
-void background()
-{
-
-    GLuint text_cosmo = LoadTextureImageFile("texturas_2/bmp_stars_milky_way.bmp");  
-    int width = 256;
-    int height = 256;
-    int length = 256;
-
-    //start in this coordinates
-    int x = 0;
-    int y = 0;
-    int z = 0;
-
-    //center the square
-    x = x - width / 2;
-    y = y - height / 2;
-    z = z - length / 2;
-
-    glEnable(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y,  z);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, z); 
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z);
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y, z);
-    glEnd();
-
-    //FRONT
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);  
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y,  z + length);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z + length);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z + length); 
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y,  z + length);
-    glEnd();
-
-    //BOTTOM
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y,  z);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y,  z + length);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y,  z + length); 
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y,  z);
-    glEnd();
-
-    //TOP
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y + height, z);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y + height, z + length); 
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z + length);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z);
-    glEnd();
-
-    //LEFT
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);      
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x, y + height, z); 
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x, y + height, z + length); 
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x, y,  z + length);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x, y,  z);     
-
-    glEnd();
-
-    //RIGHT
-    glBindTexture(GL_TEXTURE_2D, text_cosmo);
-    glBegin(GL_QUADS);  
-        glTexCoord2f(0.0f, 0.0f); glVertex3f(x + width, y,  z);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x + width, y,  z + length);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x + width, y + height, z + length); 
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x + width, y + height, z);
-    glEnd();
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 void reshape (int w, int h)
