@@ -1,11 +1,14 @@
 //Bibliotecas utilizadas
-//#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdio.h>
 
 //Definições dos arrays de dados utilizados
+float sol[] = {1,1,0,1};
+float nolight[] = {0,0,0,1};
+float reflexo = 100;
+float dir[] = {0,0,0,1}; 
 static float velSol = 0;
 static float year[8] = {0};
 static float day[8] = {0};
@@ -85,6 +88,11 @@ void display(void)
 {  
    GLuint textSol, textMerc, textVen, textTerra, textMarte, textJup, textSat, textUrano, textNetuno;
    GLUquadric *quadSol, *quadMerc, *quadVen, *quadTerra, *quadMarte, *quadJup, *quadSat, *quadNetuno, *quadUrano;
+   GLUquadricObj *disk;
+
+   disk = gluNewQuadric();
+
+   //gluDisk(disk, inDiameter, outDiameter, vertSlices, horizSlices);
 
    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -94,7 +102,7 @@ void display(void)
    glPushMatrix(); 
 
    glEnable(GL_TEXTURE_2D);  
-   GLuint texture = LoadTextureImageFile("texturas_2/bg1.bmp");   
+   GLuint texture = LoadTextureImageFile("texturas_2/bmp_stars_milky_way.bmp");   
    glBindTexture(GL_TEXTURE_2D, texture);  
    //even better quality, but this will do for now.
    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -102,19 +110,22 @@ void display(void)
    
    glBegin(GL_QUADS);  
    glTexCoord2f(0.0, 0.0);  
-   glVertex3f(-8.0, 8.0, 0.0);  
+   glVertex3f(-4.0, 4.0, 0.0);  
    glTexCoord2f(0.0, 1.0);  
-   glVertex3f(8.0, 8.0, 0.0);  
+   glVertex3f(4.0, 4.0, 0.0);  
    glTexCoord2f(1.0, 1.0);  
-   glVertex3f(8.0, -8.0, 0.0);  
+   glVertex3f(4.0, -4.0, 0.0);  
    glTexCoord2f(1.0, 0.0);  
-   glVertex3f(-8.0, -8.0, 0.0);  
+   glVertex3f(-4.0, -4.0, 0.0);  
    glEnd(); 
    glDeleteTextures(1, &texture);
    glDisable(GL_TEXTURE_2D); 
    glPopMatrix(); 
 
    glEnable(GL_DEPTH_TEST);
+
+   glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHT0); 
 
 
    //glColor3f (1.0, 1.0, 0.1);
@@ -132,9 +143,12 @@ void display(void)
    gluQuadricNormals(quadSol, GLU_SMOOTH);
    gluQuadricTexture(quadSol, GL_TRUE);
    glRotatef ((GLfloat) velSol, 0.0, 1.0, 0.0);
-   gluSphere(quadSol, (GLfloat) 0.6 , 10, 8);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, sol); // Luz solar 
+   gluSphere(quadSol, (GLfloat) radius(rads[0]), 10, 8);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, nolight); 
    glDeleteTextures(1, &textSol);
    glDisable(GL_TEXTURE_2D); 
+   glLightfv(GL_LIGHT0, GL_POSITION, dir); // Cria a luz do sol em todas as direções 
    glPopMatrix(); 
     
 
@@ -193,6 +207,7 @@ void display(void)
    glTranslatef ((GLfloat)distance(dist[2]), 0.0, 0.0);
    glRotatef ((GLfloat) day[2], 0.0, 1.0, 0.0);
    //glColor3f (0.1, 0.35, 0.8);
+   glMaterialf(GL_FRONT_AND_BACK,GL_SHININESS,reflexo); // Reflexo de luminosidade 
    gluSphere(quadTerra, (GLfloat)radius(rads[3]), 10, 8);
    glDeleteTextures(1, &textTerra);
    glDisable(GL_TEXTURE_2D);
@@ -408,7 +423,10 @@ void spinDisplayDayLeft(void){
    }
 
    for(int i=0; i<10; i++){
-      day[i] = rest(day[i] + velDay2[i]);
+      if(i == 2)
+         day[i] = rest(day[i] - velDay2[i]);
+      else
+         day[i] = rest(day[i] + velDay2[i]);
       
    }
    velSol = rest(velSol + 0.1);
@@ -464,48 +482,10 @@ float radius(float rad){
    
 }
 
-
 void spinDisplayLeft(void) {
 
    spinDisplayDayLeft();
    spinDisplayYearLeft();
-   glutPostRedisplay();
-}
-
-void spinDisplayDayRight(void){
-
-   float velDay1[10] = {0.003, 0.002, 0.46, 0.12, 12.57, 10.28, 2.58, 2.69, 0.802, 1.022};
-   float velDay2[10];
-
-   for(int i=0; i<10; i++){
-      velDay2[i] = mapFloat(velDay1[i],0.002,12.57,0.1,1);
-   }
-
-   for(int i=0; i<10; i++){
-      day[i] = rest(day[i] - velDay2[i]);
-   }
-
-}
-
-void spinDisplayYearRight(void){
-
-   float velYear1[10] = {48, 35, 29, 24, 13, 9, 6, 5, 4, 1};
-   float velYear2[10];
-
-   for(int i=0; i<10; i++){
-      velYear2[i] = mapFloat(velYear1[i],1,48,1,3);
-   }
-
-   for(int i=0; i<10; i++){
-      year[i] = rest(year[i] - velYear2[i]);
-   }
-
-}
-
-void spinDisplayRight(void)
-{
-   spinDisplayDayRight();
-   spinDisplayYearRight();
    glutPostRedisplay();
 }
 
@@ -514,9 +494,6 @@ void keyboard (unsigned char key, int x, int y)
    switch (key) {
       case 'y':
          glutIdleFunc(spinDisplayLeft);
-         break;
-      case 'Y':
-         glutIdleFunc(spinDisplayRight);
          break;
       default:
          break;
@@ -527,8 +504,8 @@ int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-   glutInitWindowSize (800, 500); 
-   glutInitWindowPosition (500, 500);
+   glutInitWindowSize (1000, 1000); 
+   glutInitWindowPosition (800, 800);
    glutCreateWindow (argv[0]);
    init ();
    glutDisplayFunc(display); 
@@ -537,4 +514,3 @@ int main(int argc, char** argv)
    glutMainLoop();
    return 0;
 }
-
