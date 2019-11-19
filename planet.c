@@ -266,8 +266,19 @@ void display(void)
 
     glPopMatrix();
 
-    //Desenhando o planeta 4 - Marte
-    glPushMatrix();
+   glLineWidth(3.0f);
+   glRotatef(45.0f,0.0f,0.0f,1.0f);
+   glBegin(GL_LINE_LOOP);
+   //aneis de saturno
+   for(int j = 1; j <= 3; j ++){
+      for (int i = 1; i <= 100; i++) {    
+	 glVertex3f(0, (0.20 + 0.015*j) * cos(2.0 * 3.14 * i / 100), (0.20 + 0.015*j) * sin(2.0 * 3.14 * i / 100));      
+         glVertex3f(0, (0.20 + 0.015*j) * cos(2.0 * 3.14 * i / 100), (0.20 + 0.015*j) * sin(2.0 * 3.14 * i / 100));
+         glVertex3f(0, (0.20 + 0.015*j) * cos(2.0 * 3.14 * i / 100), (0.20 + 0.015*j) * sin(2.0 * 3.14 * i / 100));
+		
+	  }
+   }
+   glEnd();
 
     glEnable(GL_TEXTURE_2D);
     textMarte = LoadTextureImageFile("texturas_2/bmp_mars.bmp");
